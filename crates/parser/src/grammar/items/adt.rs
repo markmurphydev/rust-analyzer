@@ -130,14 +130,19 @@ pub(crate) fn record_field_list(p: &mut Parser<'_>) {
         // test record_field_attrs
         // struct S { #[attr] f: f32 }
 
-        // test record_field_default_field_values
-        // struct S { num: u64 = 42 }
         attributes::outer_attrs(p);
         opt_visibility(p, false);
         if p.at(IDENT) {
             name(p);
             p.expect(T![:]);
             types::type_(p);
+
+            // test record_field_default_field_values
+            // struct S { num: u64 = 42 }
+            if p.eat(T![=]) {
+                expressions::expr(p);
+            }
+
             m.complete(p, RECORD_FIELD);
         } else {
             m.abandon(p);
