@@ -129,6 +129,9 @@ pub(crate) fn record_field_list(p: &mut Parser<'_>) {
         let m = p.start();
         // test record_field_attrs
         // struct S { #[attr] f: f32 }
+
+        // test record_field_default_field_values
+        // struct S { num: u64 = 42 }
         attributes::outer_attrs(p);
         opt_visibility(p, false);
         if p.at(IDENT) {
