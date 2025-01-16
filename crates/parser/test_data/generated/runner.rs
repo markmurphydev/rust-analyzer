@@ -482,6 +482,10 @@ mod ok {
         run_and_expect_no_errors("test_data/parser/inline/ok/record_field_attrs.rs");
     }
     #[test]
+    fn record_field_default_field_values() {
+        run_and_expect_no_errors("test_data/parser/inline/ok/record_field_default_field_values.rs");
+    }
+    #[test]
     fn record_field_list() {
         run_and_expect_no_errors("test_data/parser/inline/ok/record_field_list.rs");
     }
