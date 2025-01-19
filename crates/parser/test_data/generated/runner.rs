@@ -717,6 +717,12 @@ mod err {
     #[test]
     fn bad_asm_expr() { run_and_expect_errors("test_data/parser/inline/err/bad_asm_expr.rs"); }
     #[test]
+    fn comma_after_default_field_values_spread() {
+        run_and_expect_errors(
+            "test_data/parser/inline/err/comma_after_default_field_values_spread.rs",
+        );
+    }
+    #[test]
     fn comma_after_functional_update_syntax() {
         run_and_expect_errors(
             "test_data/parser/inline/err/comma_after_functional_update_syntax.rs",

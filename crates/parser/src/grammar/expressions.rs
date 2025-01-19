@@ -669,6 +669,8 @@ fn path_expr(p: &mut Parser<'_>, r: Restrictions) -> (CompletedMarker, BlockLike
 //     S { x };
 //     S { x, y: 32, };
 //     S { x, y: 32, ..Default::default() };
+//     S { .. };
+//     S { x, y:32, .. };
 //     S { x: ::default() };
 //     TupleStruct { 0: 1 };
 // }
@@ -730,19 +732,31 @@ pub(crate) fn record_expr_field_list(p: &mut Parser<'_>) {
                 //     S { .. } = S {};
                 // }
 
-                // We permit `.. }` on the left-hand side of a destructuring assignment.
+                // We permit `.. }` on the left-hand side of a destructuring assignment,
+                // and when default field values (RFC 3681) are used.
                 if !p.at(T!['}']) {
-                    expr(p);
-
                     if p.at(T![,]) {
-                        // test_err comma_after_functional_update_syntax
+                        // test_err comma_after_default_field_values_spread
                         // fn foo() {
-                        //     S { ..x, };
-                        //     S { ..x, a: 0 }
+                        //     S { .., };
+                        //     S { .., a: 0};
                         // }
 
                         // Do not bump, so we can support additional fields after this comma.
-                        p.error("cannot use a comma after the base struct");
+                        p.error("cannot use a comma after the \"..\" default operator");
+                    } else {
+                        expr(p);
+
+                        if p.at(T![,]) {
+                            // test_err comma_after_functional_update_syntax
+                            // fn foo() {
+                            //     S { ..x, };
+                            //     S { ..x, a: 0 }
+                            // }
+
+                            // Do not bump, so we can support additional fields after this comma.
+                            p.error("cannot use a comma after the base struct");
+                        }
                     }
                 }
             }
